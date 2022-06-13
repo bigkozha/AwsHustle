@@ -1,21 +1,19 @@
-# https://hub.docker.com/_/microsoft-dotnet
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR "/app/"
+EXPOSE 80
+
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /source
-EXPOSE 443
-EXPOSE 8000
+WORKDIR "/src"
+COPY ["Weather.API.csproj", "./Weather.API/"]
+RUN dotnet restore "./Weather.API/Weather.API.csproj"
+WORKDIR "/src/Weather.API/"
+COPY . .
+RUN dotnet build "./Weather.API.csproj" -c Release -o /app/build
 
-# copy csproj and restore as distinct layers
-COPY *.sln .
-COPY *.csproj ./
-RUN dotnet restore
+FROM build AS publish
+RUN dotnet publish "./Weather.API.csproj" -c Release -o /app/publish
 
-# copy everything else and build app
-COPY . ./
-WORKDIR .
-RUN dotnet publish -c release -o /app --no-restore
-
-# final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
-WORKDIR /app
-COPY --from=build /app ./
+FROM base AS final
+WORKDIR "/app/"
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Weather.API.dll"]

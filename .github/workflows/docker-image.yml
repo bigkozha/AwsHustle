@@ -34,6 +34,6 @@ jobs:
         ECR_REPOSITORY: hustle
         IMAGE_TAG: latest
       run: |
-        docker build ./Weather.API/ --file Dockerfile --tag my-image-name:$(date +%s)
+        docker build ./Weather.API/ --file Dockerfile --tag $IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 

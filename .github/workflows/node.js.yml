@@ -38,4 +38,6 @@ jobs:
       - run: ls
       - name: CDK run
         run: cdk synth
-      - run: cdk deploy        
+        working-directory: ${{ env.ECS_PATH }}/bin/
+      - run: cdk deploy
+        working-directory: ${{ env.ECS_PATH }}        

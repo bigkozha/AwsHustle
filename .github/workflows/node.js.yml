@@ -25,11 +25,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-      - run: echo "debug:$MAIN_IMAGE_LINK"
-      - run: echo "debug:$ECS_PATH"
       - run: npm ci
         working-directory: ${{ env.ECS_PATH }}
       - run: npm run build --if-present
         working-directory: ${{ env.ECS_PATH }}
       - run: npm test
         working-directory: ${{ env.ECS_PATH }}
+      - run: npm install aws-cdk-lib
+        working-directory: ${{ env.ECS_PATH }}
+      - run: cdk synth
+        working-directory: ${{ env.ECS_PATH }}
+      - run: cdk deploy
+        working-directory: ${{ env.ECS_PATH }}        

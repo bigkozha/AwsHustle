@@ -33,11 +33,13 @@ jobs:
       - run: npm test
         working-directory: ${{ env.ECS_PATH }}
       - name: Install CDK
-        run: npm install -g aws-cdk
+        run: |
+          sudo npm install -g aws-cdk
+          cdk --version
         working-directory: ${{ env.ECS_PATH }}
       - run: ls
       - name: CDK run
         run: cdk synth
-        working-directory: ${{ env.ECS_PATH }}/bin/
+        working-directory: ${{ env.ECS_PATH }}
       - run: cdk deploy
         working-directory: ${{ env.ECS_PATH }}        

@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     env:
-      ECS_PATH: './esc/'
+      ECS_PATH: 'esc/'
       MAIN_IMAGE_LINK: ${{ secrets.MAIN_IMAGE_LINK }}
 
 

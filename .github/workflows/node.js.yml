@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-      - run: npm ci
+      - run: npm install
         working-directory: ${{ env.ECS_PATH }}
       - run: npm run build --if-present
         working-directory: ${{ env.ECS_PATH }}
@@ -35,6 +35,7 @@ jobs:
       - name: Install CDK
         run: npm install -g aws-cdk
         working-directory: ${{ env.ECS_PATH }}
+      - run: ls
       - name: CDK run
         run: cdk synth
         working-directory: ${{ env.ECS_PATH }}

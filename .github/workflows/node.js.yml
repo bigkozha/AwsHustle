@@ -14,6 +14,10 @@ jobs:
 
     runs-on: ubuntu-latest
     environment: dev
+    env:
+      ECS_PATH: './esc/'
+      MAIN_IMAGE_LINK: ${{ secrets.MAIN_IMAGE_LINK }}
+
 
     steps:
       - uses: actions/checkout@v3
@@ -29,6 +33,3 @@ jobs:
         working-directory: $ECS_PATH
       - run: npm test
         working-directory: $ECS_PATH
-        env:
-          ECS_PATH: './esc/'
-          MAIN_IMAGE_LINK: ${{ secrets.MAIN_IMAGE_LINK }}

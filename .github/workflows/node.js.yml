@@ -31,7 +31,7 @@ jobs:
         working-directory: ${{ env.ECS_PATH }}
       - run: npm test
         working-directory: ${{ env.ECS_PATH }}
-      - run: npm install aws-cdk-lib
+      - run: npm install -g aws-cdk-lib
         working-directory: ${{ env.ECS_PATH }}
       - run: cdk synth
         working-directory: ${{ env.ECS_PATH }}

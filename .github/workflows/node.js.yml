@@ -20,6 +20,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-      - run: npm ci './AwsHustle/ecs/'
-      - run: npm run build --if-present './AwsHustle/ecs/'
-      - run: npm test './AwsHustle/ecs/'
+      - run: npm ci
+      - run: npm run build --if-present 
+      - run: npm test

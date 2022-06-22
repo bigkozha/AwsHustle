@@ -24,8 +24,11 @@ jobs:
       - run: echo "debug:$MAIN_IMAGE_LINK"
       - run: echo "debug:$ECS_PATH"
       - run: npm ci
+        working-directory: $ECS_PATH
       - run: npm run build --if-present
+        working-directory: $ECS_PATH
       - run: npm test
+        working-directory: $ECS_PATH
         env:
           ECS_PATH: './esc/'
           MAIN_IMAGE_LINK: ${{ secrets.MAIN_IMAGE_LINK }}

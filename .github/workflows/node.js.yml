@@ -4,11 +4,12 @@
 name: Node.js CI
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
+#  push:
+#    branches: [ "master" ]
+#  pull_request:
+#    branches: [ "master" ]
+  workflow_dispatch: 
+    
 jobs:
   build:
 
@@ -31,9 +32,11 @@ jobs:
         working-directory: ${{ env.ECS_PATH }}
       - run: npm test
         working-directory: ${{ env.ECS_PATH }}
-      - run: npm install -g aws-cdk-lib
+      - name: Install CDK
+        run: npm install -g aws-cdk
         working-directory: ${{ env.ECS_PATH }}
-      - run: cdk synth
+      - name: CDK run
+        run: cdk synth
         working-directory: ${{ env.ECS_PATH }}
       - run: cdk deploy
         working-directory: ${{ env.ECS_PATH }}        

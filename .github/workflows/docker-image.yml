@@ -39,31 +39,31 @@ jobs:
       run: |
         docker build ./Weather.API/ --file Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        
+
     - uses: actions/checkout@v3
-              - name: Use Node.js
-              uses: actions/setup-node@v3
-              with:
-                node-version: '16.x'
-              - run: npm install
-                working-directory: ${{ env.ECS_PATH }}
-              - run: npm run build --if-present
-                working-directory: ${{ env.ECS_PATH }}
-              - run: npm test
-                working-directory: ${{ env.ECS_PATH }}
-              - name: Install CDK
-                run: |
-                  sudo npm install -g aws-cdk
-                  cdk --version
-                working-directory: ${{ env.ECS_PATH }}
-              - run: ls
-              - name: CDK run
-                run: |
-                  npm install
-                  cdk synth
-                working-directory: ${{ env.ECS_PATH }}
-              - name: Login to AWS ECR
-                id: login-ecr
-                uses: aws-actions/amazon-ecr-login@v1
-              - run: cdk deploy
-                working-directory: ${{ env.ECS_PATH }}  
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+    - run: npm install
+      working-directory: ${{ env.ECS_PATH }}
+    - run: npm run build --if-present
+      working-directory: ${{ env.ECS_PATH }}
+    - run: npm test
+      working-directory: ${{ env.ECS_PATH }}
+    - name: Install CDK
+      run: |
+        sudo npm install -g aws-cdk
+        cdk --version
+      working-directory: ${{ env.ECS_PATH }}
+    - run: ls
+    - name: CDK run
+      run: |
+        npm install
+        cdk synth
+      working-directory: ${{ env.ECS_PATH }}
+    - name: Login to AWS ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    - run: cdk deploy
+      working-directory: ${{ env.ECS_PATH }}      

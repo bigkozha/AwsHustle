@@ -67,5 +67,5 @@ jobs:
         cdk synth
       working-directory: ${{ env.ECS_PATH }}
       
-    - run: cdk deploy
+    - run: cdk deploy --require-approval never
       working-directory: ${{ env.ECS_PATH }}      

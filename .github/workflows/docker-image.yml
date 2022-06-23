@@ -3,7 +3,8 @@ name: Docker Image CI
 on:
   push:
     branches: [ "master" ]
-
+  workflow_dispatch:
+  
 jobs:
 
   build:
@@ -67,5 +68,5 @@ jobs:
         cdk synth
       working-directory: ${{ env.ECS_PATH }}
       
-    - run: cdk deploy --require-approval never
+    - run: cdk deploy
       working-directory: ${{ env.ECS_PATH }}      

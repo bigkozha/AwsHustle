@@ -20,7 +20,7 @@ export class EcsStack extends Stack {
         new ecsp.ApplicationLoadBalancedFargateService(this, 'AwsHustle', {
             taskImageOptions: {
                 image: ecs.ContainerImage.fromRegistry(process.env.MAIN_IMAGE_LINK ?? ""),
-                taskRole: taskRole,
+                executionRole: taskRole
             },
             publicLoadBalancer: true,
         });

@@ -75,4 +75,4 @@ jobs:
           IMAGE_TAG: latest
         run: |
           docker build ./Weather.API/ --file Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.y }}
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY
+          docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY

@@ -26,7 +26,14 @@ jobs:
          if [[ ${{ github.ref_name }} =~ ^release.[0-9]+.[0-9]+$ ]]; then
              echo ::set-output name=match-branch-name::true
          fi
-    - name: Build
+    - name: Set variables if branch match
+      id: build-variables
       if: steps.check-tag.outputs.match-branch-name == 'true'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const data = ref.split('.')
+          console.log(data, ref)
       run: |
-        echo "Branch name is a match"    
+        echo "Branch name is a match"   
+    

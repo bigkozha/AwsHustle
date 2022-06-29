@@ -13,8 +13,8 @@ export class EcsStack extends Stack {
         const taskRole = new iam.Role(this, 'AwsHustleWorkerRole', {
             assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
             managedPolicies: [
-                ManagedPolicy.fromAwsManagedPolicyName('service-role/AmazonEC2ContainerServiceforEC2Role')
-                , ManagedPolicy.fromAwsManagedPolicyName('AmazonEC2ContainerRegistryFullAccess')],
+                ManagedPolicy.fromAwsManagedPolicyName('service-role/AmazonEC2ContainerServiceforEC2Role'),
+                ManagedPolicy.fromAwsManagedPolicyName('AmazonEC2ContainerRegistryFullAccess')],
         });
 
         new ecsp.ApplicationLoadBalancedFargateService(this, 'AwsHustle', {

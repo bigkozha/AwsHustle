@@ -10,7 +10,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "greet"
-  greet:
+  check-and-set:
     #if: github.repository == 'octo-org/octo-repo-prod'
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -34,4 +34,37 @@ jobs:
           script: |
             const data = context.ref.split('.')
             console.log(data, context.ref)
-    
+  build:
+    if: steps.match-branch-name.outputs.match == 'true'
+
+    name: Build Image
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      ECS_PATH: 'ecs'
+      MAIN_IMAGE_LINK: ${{ secrets.MAIN_IMAGE_LINK }}
+
+    steps:
+      - name: Build the Docker image
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to AWS ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+
+      - name: Build tag push to AWS ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: hustle
+          IMAGE_TAG: latest
+        run: |
+          docker build ./Weather.API/ --file Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

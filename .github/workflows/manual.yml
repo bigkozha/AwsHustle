@@ -17,9 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       branch-match: ${{ steps.match-branch-name.outputs.match }}
-      x: ${{ steps.match-branch-name.outputs.x }}
-      y: ${{ steps.match-branch-name.outputs.y }}
-      u: ${{ steps.match-branch-name.outputs.u }}
+      x: ${{ steps.build-variables.outputs.x }}
+      y: ${{ steps.build-variables.outputs.y }}
+      u: ${{ steps.build-variables.outputs.u }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

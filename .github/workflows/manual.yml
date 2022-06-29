@@ -39,7 +39,7 @@ jobs:
             console.log(data, context.ref)
   build:
     needs: check-and-set
-    if: needs.match-branch-name.outputs.match == 'true'
+    if: needs.branch-match.outputs.branch-match == 'true'
 
     name: Build Image
     runs-on: ubuntu-latest

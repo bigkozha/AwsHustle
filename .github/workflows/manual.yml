@@ -17,16 +17,21 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Runs a single command using the runners shell
-    - name: Name of the branch
-      run: echo "Branch name is ${{ github.ref_name }}"
-    - name: Match Branch name
-      id: match-branch-name
-      run: |
-         if [[ ${{ github.ref_name }} =~ ^release.[0-9]+.[0-9]+$ ]]; then
-             echo ::set-output name=match::true
-         fi
-    - name: Build
-      if: steps.match-branch-name.outputs.match == 'true'
-      run: |
-        echo "Branch name is a match"    
+      # Runs a single command using the runners shell
+      - name: Name of the branch
+        run: echo "Branch name is ${{ github.ref_name }}"
+      - name: Match Branch name
+        id: match-branch-name
+        run: |
+          if [[ ${{ github.ref_name }} =~ ^release.[0-9]+.[0-9]+$ ]]; then
+              echo ::set-output name=match-branch-name::true
+          fi
+      - name: Set variables if branch match
+        id: build-variables
+        if: steps.check-tag.outputs.match-branch-name == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const data = ref.split('.')
+            console.log(data, ref)
+    

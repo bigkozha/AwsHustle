@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       branch-match: ${{ steps.match-branch-name.outputs.match }}
+      x: ${{ steps.match-branch-name.outputs.x }}
+      y: ${{ steps.match-branch-name.outputs.y }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -37,6 +39,8 @@ jobs:
           script: |
             const data = context.ref.split('.')
             console.log(data, context.ref)
+            core.setOutput('x', data[1]);
+            core.setOutput('y', data[2]);
   build:
     needs: check-and-set
     if: needs.check-and-set.outputs.branch-match == 'true'
@@ -70,5 +74,5 @@ jobs:
           ECR_REPOSITORY: hustle
           IMAGE_TAG: latest
         run: |
-          docker build ./Weather.API/ --file Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker build ./Weather.API/ --file Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.y }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

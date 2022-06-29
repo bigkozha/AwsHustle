@@ -32,6 +32,6 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const data = ref.split('.')
-            console.log(data, ref)
+            const data = core.ref.split('.')
+            console.log(data, core.ref)
     

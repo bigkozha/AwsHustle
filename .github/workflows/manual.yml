@@ -5,7 +5,8 @@ name: Manual workflow
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 on:
-  create:
+  #create:
+  workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -35,7 +36,7 @@ jobs:
             const data = context.ref.split('.')
             console.log(data, context.ref)
   build:
-    if: steps.match-branch-name.outputs.match == 'true'
+    if: jobs.check-and-set.steps.match-branch-name.outputs.match == 'true'
 
     name: Build Image
     runs-on: ubuntu-latest

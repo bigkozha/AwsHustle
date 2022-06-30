@@ -34,7 +34,7 @@ jobs:
             console.log(data, context.ref)
             core.setOutput('x', data[1]);
             core.setOutput('y', data[2]);
-            core.setOutput('z', github.run_number);
+            core.setOutput('z', github.runNumber);
             
   build:
     needs: check-and-set
@@ -67,5 +67,12 @@ jobs:
           ECR_REPOSITORY: hustle
           IMAGE_TAG: latest
         run: |
-          docker build ./Weather.API/ --file Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} 
+          docker build ./Weather.API/ --file Dockerfile \
+          --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable \
+          --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }} \
+          --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }} \
+          --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} \
+          --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }} \
+          --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }} \
+          --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} 
           docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY

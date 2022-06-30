@@ -34,7 +34,7 @@ jobs:
             console.log(data, context.ref)
             core.setOutput('x', data[1]);
             core.setOutput('y', data[2]);
-            core.setOutput('z', github.runNumber);
+            core.setOutput('z', context.runNumber);
             
   build:
     needs: check-and-set

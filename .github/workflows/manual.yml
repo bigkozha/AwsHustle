@@ -1,6 +1,4 @@
-  
-  
-  name: Release branches
+name: Release branches
   
   on:
     #create:
@@ -69,12 +67,5 @@
             ECR_REPOSITORY: hustle
             IMAGE_TAG: latest
           run: |
-            docker build ./Weather.API/ --file Dockerfile \ 
-            --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable \
-            --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }} \
-            --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }} \ 
-            --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} \
-            --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }} \ 
-            --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }} \ 
-            --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }}
+            docker build ./Weather.API/ --file Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}             --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} 
             docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY

@@ -1,71 +1,71 @@
 name: Release branches
-  
-  on:
-    #create:
-    workflow_dispatch:
-  
-  jobs:
-    check-and-set:
-      runs-on: ubuntu-latest
-      outputs:
-        branch-match: ${{ steps.match-branch-name.outputs.match }}
-        x: ${{ steps.build-variables.outputs.x }}
-        y: ${{ steps.build-variables.outputs.y }}
-        z: ${{ steps.build-variables.outputs.z }}
-      
-      steps:
-        - name: Name of the branch
-          run: echo "Branch name is ${{ github.ref_name }}"
+
+on:
+  #create:
+  workflow_dispatch:
+
+jobs:
+  check-and-set:
+    runs-on: ubuntu-latest
+    outputs:
+      branch-match: ${{ steps.match-branch-name.outputs.match }}
+      x: ${{ steps.build-variables.outputs.x }}
+      y: ${{ steps.build-variables.outputs.y }}
+      z: ${{ steps.build-variables.outputs.z }}
+    
+    steps:
+      - name: Name of the branch
+        run: echo "Branch name is ${{ github.ref_name }}"
+        
+      - name: Match Branch name
+        id: match-branch-name
+        run: |
+          if [[ ${{ github.ref_name }} =~ ^release.[0-9]+.[0-9]+$ ]]; then
+              echo ::set-output name=match::true
+          fi
           
-        - name: Match Branch name
-          id: match-branch-name
-          run: |
-            if [[ ${{ github.ref_name }} =~ ^release.[0-9]+.[0-9]+$ ]]; then
-                echo ::set-output name=match::true
-            fi
+      - name: Set variables if branch match
+        id: build-variables
+        if: steps.match-branch-name.outputs.match == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const data = context.ref.split('.')
+            console.log(data, context.ref)
+            core.setOutput('x', data[1]);
+            core.setOutput('y', data[2]);
+            core.setOutput('z', github.run_number);
             
-        - name: Set variables if branch match
-          id: build-variables
-          if: steps.match-branch-name.outputs.match == 'true'
-          uses: actions/github-script@v6
-          with:
-            script: |
-              const data = context.ref.split('.')
-              console.log(data, context.ref)
-              core.setOutput('x', data[1]);
-              core.setOutput('y', data[2]);
-              core.setOutput('z', context.runNumber);
-              
-    build:
-      needs: check-and-set
-      if: needs.check-and-set.outputs.branch-match == 'true'
-      name: Build Image
-      runs-on: ubuntu-latest
-      environment: dev
-      env:
-        ECS_PATH: 'ecs'
-        MAIN_IMAGE_LINK: ${{ secrets.MAIN_IMAGE_LINK }}
-  
-      steps:
-        - name: Build the Docker image
-          uses: actions/checkout@v3
-  
-        - name: Configure AWS Credentials
-          uses: aws-actions/configure-aws-credentials@v1
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: us-east-1
-  
-        - name: Login to AWS ECR
-          id: login-ecr
-          uses: aws-actions/amazon-ecr-login@v1
-  
-        - name: Build tag push to AWS ECR
-          env:
-            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-            ECR_REPOSITORY: hustle
-            IMAGE_TAG: latest
-          run: |
-            docker build ./Weather.API/ --file Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}             --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} 
-            docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
+  build:
+    needs: check-and-set
+    if: needs.check-and-set.outputs.branch-match == 'true'
+    name: Build Image
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      ECS_PATH: 'ecs'
+      MAIN_IMAGE_LINK: ${{ secrets.MAIN_IMAGE_LINK }}
+
+    steps:
+      - name: Build the Docker image
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to AWS ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build tag push to AWS ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: hustle
+          IMAGE_TAG: latest
+        run: |
+          docker build ./Weather.API/ --file Dockerfile --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:stable.${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }} --tag $ECR_REGISTRY/$ECR_REPOSITORY:${{ needs.check-and-set.outputs.x }}.${{ needs.check-and-set.outputs.y }}.${{ needs.check-and-set.outputs.z }} 
+          docker push --all-tags $ECR_REGISTRY/$ECR_REPOSITORY
